@@ -63,6 +63,7 @@ export function ClassCourseListScreen() {
   const [keyword, setKeyword] = useState('');
   const [classes, setClasses] = useState<ClassCourse[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
   const [submitting, setSubmitting] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -79,6 +80,7 @@ export function ClassCourseListScreen() {
     const activeStatus = status || statusFilter;
 
     setLoading(true);
+    setError(undefined);
     try {
       setClasses(
         await classCoursesApi.list({
@@ -88,6 +90,8 @@ export function ClassCourseListScreen() {
           offset: nextOffset
         })
       );
+    } catch (error) {
+      setError((error as Error).message);
     } finally {
       setLoading(false);
     }
@@ -507,7 +511,8 @@ export function ClassCourseListScreen() {
       ) : null}
 
       {!isFormMode && loading ? <LoadingState /> : null}
-      {!isFormMode && !loading && !classes.length ? <EmptyState title="No classes" description="Create classes to start enrollments." /> : null}
+      {!isFormMode && error ? <EmptyState title="Unable to load classes" description={error} /> : null}
+      {!isFormMode && !loading && !error && !classes.length ? <EmptyState title="No classes" description="Create classes to start enrollments." /> : null}
 
       {!isFormMode ? (
         <FlatList

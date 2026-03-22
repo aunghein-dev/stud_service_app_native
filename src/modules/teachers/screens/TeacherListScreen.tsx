@@ -35,6 +35,7 @@ export function TeacherListScreen() {
   const [offset, setOffset] = useState(0);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
   const [submitting, setSubmitting] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -42,9 +43,12 @@ export function TeacherListScreen() {
 
   const load = async (q = keyword, nextOffset = offset) => {
     setLoading(true);
+    setError(undefined);
     try {
       const list = await teachersApi.list({ q, limit: PAGE_SIZE, offset: nextOffset });
       setTeachers(list);
+    } catch (error) {
+      setError((error as Error).message);
     } finally {
       setLoading(false);
     }
@@ -93,11 +97,19 @@ export function TeacherListScreen() {
       Alert.alert('Missing Fields', 'Teacher name and phone are required.');
       return;
     }
+    if (!editingId && !form.teacher_code.trim()) {
+      Alert.alert('Missing Fields', 'Teacher code is required for new records.');
+      return;
+    }
+    if (Number(form.default_fee_amount || 0) < 0) {
+      Alert.alert('Invalid Amount', 'Default fee must be zero or greater.');
+      return;
+    }
 
     setSubmitting(true);
     try {
       if (editingId) {
-        const updated = await teachersApi.update(editingId, {
+        await teachersApi.update(editingId, {
           teacher_name: form.teacher_name,
           phone: form.phone,
           address: form.address,
@@ -197,7 +209,8 @@ export function TeacherListScreen() {
       ) : null}
 
       {!isFormMode && loading ? <LoadingState /> : null}
-      {!isFormMode && !loading && !teachers.length ? <EmptyState title="No teachers" description="Add teacher records to assign classes." /> : null}
+      {!isFormMode && error ? <EmptyState title="Unable to load teachers" description={error} /> : null}
+      {!isFormMode && !loading && !error && !teachers.length ? <EmptyState title="No teachers" description="Add teacher records to assign classes." /> : null}
 
       {!isFormMode ? (
         <FlatList

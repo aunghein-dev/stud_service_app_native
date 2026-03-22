@@ -43,6 +43,18 @@ export function SignUpScreen() {
       Alert.alert('Missing Details', 'School name, tenant slug, admin name, email, and password are required.');
       return;
     }
+    if (tenantSlug.trim().length < 3) {
+      Alert.alert('Invalid Tenant', 'Tenant slug must be at least 3 characters.');
+      return;
+    }
+    if (!email.includes('@')) {
+      Alert.alert('Invalid Email', 'Enter a valid email address.');
+      return;
+    }
+    if (password.length < 8) {
+      Alert.alert('Invalid Password', 'Password must be at least 8 characters.');
+      return;
+    }
 
     try {
       await signUp({

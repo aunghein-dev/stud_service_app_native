@@ -1,7 +1,9 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { BrandLogo } from '@/components/brand/BrandLogo';
 import { ScreenContainer } from '@/components/common/ScreenContainer';
+import { Gap } from '@/components/layout/Gap';
 import { theme } from '@/theme';
 
 type Props = {
@@ -28,19 +30,17 @@ export function AuthShell({
   return (
     <ScreenContainer scroll contentStyle={styles.content}>
       <View style={[styles.hero, palette === 'signup' && styles.heroSignup]}>
-        <View style={styles.brandRow}>
-          <View style={styles.brandMark}>
-            <Text style={styles.brandMarkText}>SSA</Text>
-          </View>
+        <Gap direction="row" justify="space-between" align="center" size="sm" style={styles.brandRow}>
+          <BrandLogo size={58} showWordmark title="Stud Service App" subtitle="School ops and fee control" />
           <View style={styles.heroBadge}>
             <Ionicons name="layers-outline" size={13} color={theme.colors.primary} />
             <Text style={styles.heroBadgeText}>Multi-school workspace</Text>
           </View>
-        </View>
+        </Gap>
         <Text style={styles.eyebrow}>{eyebrow}</Text>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>{subtitle}</Text>
-        <View style={styles.pillRow}>
+        <Gap direction="row" wrap size="xs" style={styles.pillRow}>
           <View style={styles.pill}>
             <Text style={styles.pillText}>Tenant auth</Text>
           </View>
@@ -50,17 +50,17 @@ export function AuthShell({
           <View style={styles.pill}>
             <Text style={styles.pillText}>API protected</Text>
           </View>
-        </View>
+        </Gap>
       </View>
 
       <View style={styles.card}>
         {children}
-        <View style={styles.footerRow}>
+        <Gap direction="row" wrap align="center" justify="center" size="xs" style={styles.footerRow}>
           <Text style={styles.footerText}>{footerText}</Text>
           <Pressable onPress={onFooterActionPress} style={({ pressed }) => [styles.footerLink, pressed && styles.footerLinkPressed]}>
             <Text style={styles.footerLinkText}>{footerActionLabel}</Text>
           </Pressable>
-        </View>
+        </Gap>
       </View>
     </ScreenContainer>
   );
@@ -68,12 +68,11 @@ export function AuthShell({
 
 const styles = StyleSheet.create({
   content: {
-    gap: theme.spacing.lg
+    width: '100%'
   },
   hero: {
     borderRadius: 28,
     padding: theme.spacing.xl,
-    gap: theme.spacing.sm,
     backgroundColor: '#e7f1ea',
     borderWidth: 1,
     borderColor: '#cadacd',
@@ -84,22 +83,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddcdb5'
   },
   brandRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: theme.spacing.sm
-  },
-  brandMark: {
-    width: 52,
-    height: 52,
-    borderRadius: 18,
-    backgroundColor: theme.colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  brandMarkText: {
-    ...theme.typography.subheading,
-    color: theme.colors.onPrimary
+    minWidth: 0
   },
   heroBadge: {
     flexDirection: 'row',
@@ -130,9 +114,6 @@ const styles = StyleSheet.create({
     color: theme.colors.textMuted
   },
   pillRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: theme.spacing.xs,
     marginTop: theme.spacing.xs
   },
   pill: {
@@ -153,15 +134,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.border,
     padding: theme.spacing.xl,
-    gap: theme.spacing.md,
     ...theme.shadows.md
   },
   footerRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: theme.spacing.xs,
-    justifyContent: 'center',
     paddingTop: theme.spacing.xs
   },
   footerText: {

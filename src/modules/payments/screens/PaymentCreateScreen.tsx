@@ -82,12 +82,16 @@ export function PaymentCreateScreen() {
   const selectedClass = selectedEnrollmentRow ? classMap.get(Number(selectedEnrollmentRow.class_course_id)) : undefined;
 
   const loadLookupTables = async () => {
-    const [studentRows, classRows] = await Promise.all([
-      studentsApi.list({ limit: 300 }),
-      classCoursesApi.list({ limit: 300 })
-    ]);
-    setStudents(studentRows);
-    setClasses(classRows);
+    try {
+      const [studentRows, classRows] = await Promise.all([
+        studentsApi.list({ limit: 300 }),
+        classCoursesApi.list({ limit: 300 })
+      ]);
+      setStudents(studentRows);
+      setClasses(classRows);
+    } catch (error) {
+      Alert.alert('Lookup Error', (error as Error).message);
+    }
   };
 
   const loadEnrollments = async () => {
@@ -101,6 +105,8 @@ export function PaymentCreateScreen() {
             (item.payment_status === 'unpaid' || item.payment_status === 'partial')
         )
       );
+    } catch (error) {
+      Alert.alert('Enrollment Error', (error as Error).message);
     } finally {
       setLoadingRows(false);
     }

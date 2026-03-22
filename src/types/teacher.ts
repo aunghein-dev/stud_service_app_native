@@ -14,3 +14,7 @@ export type Teacher = {
   created_at: string;
   updated_at: string;
 };
+
+export type TeacherCreateInput = Omit<Teacher, 'id' | 'created_at' | 'updated_at'>;
+
+export type TeacherUpdateInput = Omit<TeacherCreateInput, 'teacher_code'>;

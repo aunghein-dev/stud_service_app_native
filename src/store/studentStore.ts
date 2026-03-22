@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { studentsApi } from '@/services/studentsApi';
-import type { Student, StudentInput } from '@/types/student';
+import type { Student, StudentCreateInput, StudentUpdateInput } from '@/types/student';
 import type { ListQuery } from '@/types/common';
 
 type StudentState = {
@@ -8,8 +8,8 @@ type StudentState = {
   loading: boolean;
   error?: string;
   fetchStudents: (query?: ListQuery) => Promise<void>;
-  createStudent: (input: StudentInput) => Promise<Student>;
-  updateStudent: (id: number, input: Partial<StudentInput>) => Promise<Student>;
+  createStudent: (input: StudentCreateInput) => Promise<Student>;
+  updateStudent: (id: number, input: StudentUpdateInput) => Promise<Student>;
   deleteStudent: (id: number) => Promise<void>;
 };
 

@@ -18,4 +18,8 @@ export type Student = {
   updated_at: string;
 };
 
-export type StudentInput = Omit<Student, 'id' | 'created_at' | 'updated_at'>;
+export type StudentCreateInput = Omit<Student, 'id' | 'created_at' | 'updated_at'>;
+
+export type StudentUpdateInput = Omit<StudentCreateInput, 'student_code'>;
+
+export type StudentInput = StudentCreateInput;

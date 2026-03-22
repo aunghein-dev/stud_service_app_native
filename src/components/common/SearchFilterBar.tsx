@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AppButton } from '@/components/common/AppButton';
+import { Gap } from '@/components/layout/Gap';
 import { theme } from '@/theme';
 
 type Props = {
@@ -14,8 +15,8 @@ type Props = {
 export function SearchFilterBar({ value, onChangeText, onApply, placeholder = 'Search' }: Props) {
   return (
     <View style={styles.wrapper}>
-      <View style={styles.row}>
-        <View style={styles.inputWrap}>
+      <Gap direction="row" align="center" size="xs">
+        <Gap direction="row" align="center" size="xs" style={styles.inputWrap}>
           <Ionicons name="search-outline" size={14} color={theme.colors.textSubtle} />
           <TextInput
             value={value}
@@ -38,7 +39,7 @@ export function SearchFilterBar({ value, onChangeText, onApply, placeholder = 'S
               <Ionicons name="close-circle" size={16} color={theme.colors.textSubtle} />
             </Pressable>
           ) : null}
-        </View>
+        </Gap>
         <AppButton
           label="Go"
           onPress={onApply}
@@ -47,7 +48,7 @@ export function SearchFilterBar({ value, onChangeText, onApply, placeholder = 'S
           fullWidth={false}
           style={styles.applyButton}
         />
-      </View>
+      </Gap>
     </View>
   );
 }
@@ -60,16 +61,8 @@ const styles = StyleSheet.create({
     borderColor: '#c8d8d0',
     padding: theme.spacing.xs
   },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing.xs
-  },
   inputWrap: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing.xs,
     backgroundColor: theme.colors.surface,
     borderRadius: theme.radii.md,
     paddingHorizontal: theme.spacing.sm,

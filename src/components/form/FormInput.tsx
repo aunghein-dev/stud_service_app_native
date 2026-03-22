@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleProp, StyleSheet, Text, TextInput, TextInputProps, View, ViewStyle } from 'react-native';
+import { Gap } from '@/components/layout/Gap';
 import { theme } from '@/theme';
 
 type Props = {
@@ -38,7 +39,7 @@ export function FormInput({
   const [focused, setFocused] = useState(false);
 
   return (
-    <View style={[styles.container, compact && styles.containerCompact, style]}>
+    <Gap size={compact ? 'xxs' : 'xs'} style={style}>
       {!hideLabel ? <Text style={styles.label}>{label}</Text> : null}
       <TextInput
         value={value}
@@ -63,17 +64,11 @@ export function FormInput({
         onBlur={() => setFocused(false)}
       />
       {error ? <Text style={styles.error}>{error}</Text> : null}
-    </View>
+    </Gap>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    gap: theme.spacing.xs
-  },
-  containerCompact: {
-    gap: theme.spacing.xxs
-  },
   label: {
     ...theme.typography.caption,
     color: theme.colors.textMuted,

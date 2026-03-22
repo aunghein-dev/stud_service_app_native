@@ -19,6 +19,7 @@ export function ReportsOverviewScreen() {
   const headerScroll = useHeaderAutoHideListScroll();
   const [gross, setGross] = useState<GrossReport>();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
   const [className, setClassName] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
@@ -36,6 +37,7 @@ export function ReportsOverviewScreen() {
     nextDateTo?: string;
   } = {}) => {
     setLoading(true);
+    setError(undefined);
     try {
       setGross(
         await reportsApi.gross({
@@ -46,6 +48,8 @@ export function ReportsOverviewScreen() {
           offset: nextOffset
         })
       );
+    } catch (error) {
+      setError((error as Error).message);
     } finally {
       setLoading(false);
     }
@@ -119,7 +123,8 @@ export function ReportsOverviewScreen() {
       </View>
 
       {loading ? <LoadingState /> : null}
-      {!loading && !gross ? <EmptyState title="No report data" description="Add transactions to generate report insights." /> : null}
+      {error ? <EmptyState title="Unable to load reports" description={error} /> : null}
+      {!loading && !error && !gross ? <EmptyState title="No report data" description="Add transactions to generate report insights." /> : null}
 
       {gross ? (
         <FlatList

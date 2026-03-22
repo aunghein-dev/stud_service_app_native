@@ -22,3 +22,5 @@ export type PaymentInput = {
   note?: string;
   received_by?: string;
 };
+
+export type PaymentUpdateInput = Omit<PaymentInput, 'enrollment_id'>;

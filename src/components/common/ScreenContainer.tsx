@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HeaderMotionProvider, useCreateHeaderMotionController } from '@/components/common/headerMotion';
+import { Gap } from '@/components/layout/Gap';
 import { theme } from '@/theme';
 
 type Props = {
@@ -57,7 +58,11 @@ export function ScreenContainer({ children, scroll = true, contentStyle }: Props
             <View style={[styles.orb, styles.orbRight]} />
             <View style={[styles.orb, styles.orbBottom]} />
           </View>
-          <Animated.View style={[styles.contentStatic, contentStyle, animatedStyle]}>{children}</Animated.View>
+          <Animated.View style={[styles.contentStatic, contentStyle, animatedStyle]}>
+            <Gap size="lg" fill>
+              {children}
+            </Gap>
+          </Animated.View>
         </SafeAreaView>
       </HeaderMotionProvider>
     );
@@ -81,7 +86,9 @@ export function ScreenContainer({ children, scroll = true, contentStyle }: Props
           }}
           scrollEventThrottle={16}
         >
-          <Animated.View style={animatedStyle}>{children}</Animated.View>
+          <Animated.View style={animatedStyle}>
+            <Gap size="lg">{children}</Gap>
+          </Animated.View>
         </ScrollView>
       </SafeAreaView>
     </HeaderMotionProvider>
@@ -125,14 +132,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: theme.spacing.lg,
     paddingTop: theme.spacing.lg,
-    paddingBottom: theme.spacing.xxl,
-    gap: theme.spacing.lg
+    paddingBottom: theme.spacing.xxl
   },
   contentStatic: {
     flex: 1,
     paddingHorizontal: theme.spacing.lg,
     paddingTop: theme.spacing.lg,
-    paddingBottom: theme.spacing.md,
-    gap: theme.spacing.lg
+    paddingBottom: theme.spacing.md
   }
 });

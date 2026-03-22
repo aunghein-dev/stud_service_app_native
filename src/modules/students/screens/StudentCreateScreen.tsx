@@ -50,13 +50,17 @@ export function StudentCreateScreen() {
   });
 
   const onSubmit = handleSubmit(async (values) => {
-    await createStudent({
-      ...values,
-      date_of_birth: '',
-      is_active: true
-    });
-    Alert.alert('Saved', 'Student profile has been created.');
-    navigation.goBack();
+    try {
+      await createStudent({
+        ...values,
+        date_of_birth: '',
+        is_active: true
+      });
+      Alert.alert('Saved', 'Student profile has been created.');
+      navigation.goBack();
+    } catch (error) {
+      Alert.alert('Save Failed', (error as Error).message);
+    }
   });
 
   return (

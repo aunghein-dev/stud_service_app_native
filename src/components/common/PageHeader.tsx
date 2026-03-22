@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Animated, LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '@/components/common/AppButton';
 import { useHeaderMotion } from '@/components/common/headerMotion';
+import { Gap } from '@/components/layout/Gap';
 import { theme } from '@/theme';
 
 type Props = {
@@ -50,15 +51,15 @@ export function PageHeader({ title, subtitle, actionLabel, onActionPress }: Prop
 
   return (
     <Animated.View style={[styles.motionWrap, animatedStyle]}>
-      <View style={styles.container} onLayout={onMeasure}>
-        <View style={styles.copy}>
+      <Gap direction="row" justify="space-between" align="center" size="md" style={styles.container} onLayout={onMeasure}>
+        <Gap size="xxs" style={styles.copy}>
           <Text style={styles.title}>{title}</Text>
           {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
-        </View>
+        </Gap>
         {actionLabel && onActionPress ? (
           <AppButton label={actionLabel} onPress={onActionPress} variant="ghost" size="compact" fullWidth={false} />
         ) : null}
-      </View>
+      </Gap>
     </Animated.View>
   );
 }
@@ -68,10 +69,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: theme.spacing.md
+    minWidth: 0
   },
   copy: {
     flex: 1

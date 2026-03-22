@@ -27,6 +27,8 @@ export type ClassCourse = {
   updated_at: string;
 };
 
+export type ClassCourseInput = Omit<ClassCourse, 'id' | 'created_at' | 'updated_at'>;
+
 export type OptionalFeeItem = {
   id: ID;
   class_course_id: ID;

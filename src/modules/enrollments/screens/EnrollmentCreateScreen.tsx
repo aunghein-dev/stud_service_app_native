@@ -134,6 +134,8 @@ export function EnrollmentCreateScreen() {
       ]);
       setStudentOptions(students);
       setClassOptions(classes);
+    } catch (error) {
+      Alert.alert('Lookup Error', (error as Error).message);
     } finally {
       setLoadingLookups(false);
     }
@@ -200,6 +202,7 @@ export function EnrollmentCreateScreen() {
         enrollment_date: values.enrollment_date,
         discount_amount: values.discount_amount,
         optional_items: selectedOptionalItems.map((item) => ({
+          optional_fee_item_id: item.id,
           item_name: item.item_name,
           amount: item.amount,
           quantity: item.quantity

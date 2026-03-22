@@ -8,7 +8,7 @@ type EnrollmentState = {
   loading: boolean;
   error?: string;
   fetchEnrollments: (query?: ListQuery) => Promise<void>;
-  createEnrollment: (input: EnrollmentInput) => Promise<{ enrollment: Enrollment; receipt?: unknown }>;
+  createEnrollment: (input: EnrollmentInput) => Promise<{ enrollment: Enrollment; receipt?: unknown; initial_payment?: unknown }>;
   updateEnrollment: (id: number, input: { discount_amount: number; note?: string }) => Promise<Enrollment>;
   deleteEnrollment: (id: number) => Promise<void>;
 };
@@ -29,7 +29,7 @@ export const useEnrollmentStore = create<EnrollmentState>((set) => ({
   createEnrollment: async (input) => {
     const result = await enrollmentsApi.create(input);
     set((state) => ({ enrollments: [result.enrollment, ...state.enrollments] }));
-    return { enrollment: result.enrollment, receipt: result.receipt };
+    return { enrollment: result.enrollment, receipt: result.receipt, initial_payment: result.initial_payment };
   },
   updateEnrollment: async (id, input) => {
     const updated = await enrollmentsApi.update(id, input);
