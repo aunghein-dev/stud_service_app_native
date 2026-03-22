@@ -8,6 +8,7 @@ import { ScreenContainer } from '@/components/common/ScreenContainer';
 import { PageHeader } from '@/components/common/PageHeader';
 import { AppButton } from '@/components/common/AppButton';
 import { FormInput } from '@/components/form/FormInput';
+import { Gap } from '@/components/layout/Gap';
 import { useStudentStore } from '@/store/studentStore';
 import { theme } from '@/theme';
 
@@ -67,55 +68,57 @@ export function StudentCreateScreen() {
     <ScreenContainer>
       <PageHeader title="Create Student" subtitle="Capture required details and keep profiles clean." />
       <View style={styles.formCard}>
-        <Controller
-          control={control}
-          name="student_code"
-          render={({ field: { value, onChange } }) => (
-            <FormInput
-              label="Student Code"
-              value={value}
-              onChangeText={onChange}
-              error={errors.student_code?.message}
-              placeholder="S-103"
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="full_name"
-          render={({ field: { value, onChange } }) => (
-            <FormInput
-              label="Full Name"
-              value={value}
-              onChangeText={onChange}
-              error={errors.full_name?.message}
-              placeholder="Mia Collins"
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="phone"
-          render={({ field: { value, onChange } }) => (
-            <FormInput
-              label="Phone"
-              value={value}
-              onChangeText={onChange}
-              error={errors.phone?.message}
-              keyboardType="phone-pad"
-              placeholder="+1-200-000-0003"
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="guardian_name"
-          render={({ field: { value, onChange } }) => (
-            <FormInput label="Guardian Name" value={value} onChangeText={onChange} placeholder="Optional" />
-          )}
-        />
-        <Text style={styles.hint}>Gender, school, and note fields can be extended in the next iteration.</Text>
-        <AppButton label={isSubmitting ? 'Saving...' : 'Save Student'} onPress={onSubmit} disabled={isSubmitting} />
+        <Gap size="md">
+          <Controller
+            control={control}
+            name="student_code"
+            render={({ field: { value, onChange } }) => (
+              <FormInput
+                label="Student Code"
+                value={value}
+                onChangeText={onChange}
+                error={errors.student_code?.message}
+                placeholder="S-103"
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="full_name"
+            render={({ field: { value, onChange } }) => (
+              <FormInput
+                label="Full Name"
+                value={value}
+                onChangeText={onChange}
+                error={errors.full_name?.message}
+                placeholder="Mia Collins"
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="phone"
+            render={({ field: { value, onChange } }) => (
+              <FormInput
+                label="Phone"
+                value={value}
+                onChangeText={onChange}
+                error={errors.phone?.message}
+                keyboardType="phone-pad"
+                placeholder="+1-200-000-0003"
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="guardian_name"
+            render={({ field: { value, onChange } }) => (
+              <FormInput label="Guardian Name" value={value} onChangeText={onChange} placeholder="Optional" />
+            )}
+          />
+          <Text style={styles.hint}>Gender, school, and note fields can be extended in the next iteration.</Text>
+          <AppButton label={isSubmitting ? 'Saving...' : 'Save Student'} onPress={onSubmit} disabled={isSubmitting} />
+        </Gap>
       </View>
     </ScreenContainer>
   );
@@ -128,7 +131,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.border,
     padding: theme.spacing.lg,
-    gap: theme.spacing.md,
     ...theme.shadows.md
   },
   hint: {

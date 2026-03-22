@@ -2,7 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
+import { brandLogoSvg } from '@/branding/logoSvg';
 import { AppButton } from '@/components/common/AppButton';
+import { BrandLogo } from '@/components/brand/BrandLogo';
 import { settingsApi } from '@/services/settingsApi';
 import { studentsApi } from '@/services/studentsApi';
 import { classCoursesApi } from '@/services/classCoursesApi';
@@ -120,7 +122,7 @@ function escapeHtml(value: string): string {
     .replace(/'/g, '&#039;');
 }
 
-function buildHtml(slip: SlipView): string {
+function buildHtml(slip: SlipView, showLogo: boolean): string {
   const optionalRows = slip.optionalItems.length
     ? slip.optionalItems
         .map(
@@ -150,6 +152,13 @@ function buildHtml(slip: SlipView): string {
     .filter((item) => item.show)
     .map((item) => `<tr${item.strong ? ` class="totals"` : ''}><td>${item.label}</td><td class="right">${formatCurrency(item.value)}</td></tr>`)
     .join('');
+  const logoMarkup = showLogo
+    ? `
+        <div class="brand-mark">
+          ${brandLogoSvg}
+        </div>
+      `
+    : '';
 
   return `
     <html>
@@ -157,6 +166,10 @@ function buildHtml(slip: SlipView): string {
         <style>
           body { font-family: Arial, Helvetica, sans-serif; padding: 24px; color: #172320; }
           .header { border: 1px solid #d4ddd5; border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+          .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+          .brand-block { display: flex; align-items: center; gap: 14px; }
+          .brand-mark { width: 62px; height: 62px; border-radius: 20px; overflow: hidden; flex: 0 0 auto; }
+          .brand-mark svg { width: 62px; height: 62px; display: block; }
           .title { margin: 0; font-size: 24px; }
           .muted { color: #5f6f68; margin: 4px 0; }
           .badge { display: inline-block; margin-top: 8px; padding: 4px 10px; border-radius: 999px; border: 1px solid #14584f; background: #d7ece5; color: #14584f; font-size: 11px; }
@@ -176,11 +189,18 @@ function buildHtml(slip: SlipView): string {
       </head>
       <body>
         <div class="header">
-          <h1 class="title">${escapeHtml(slip.schoolName)}</h1>
-          <p class="muted">${escapeHtml(slip.schoolAddress)}</p>
-          <p class="muted">Phone: ${escapeHtml(slip.schoolPhone)}</p>
-          <p class="muted"><strong>Receipt:</strong> ${escapeHtml(slip.receiptNo)} | <strong>Issued:</strong> ${escapeHtml(slip.issuedDateTime)}</p>
-          <span class="badge">${escapeHtml(slip.receiptType.toUpperCase())}</span>
+          <div class="header-top">
+            <div class="brand-block">
+              ${logoMarkup}
+              <div>
+                <h1 class="title">${escapeHtml(slip.schoolName)}</h1>
+                <p class="muted">${escapeHtml(slip.schoolAddress)}</p>
+                <p class="muted">Phone: ${escapeHtml(slip.schoolPhone)}</p>
+                <p class="muted"><strong>Receipt:</strong> ${escapeHtml(slip.receiptNo)} | <strong>Issued:</strong> ${escapeHtml(slip.issuedDateTime)}</p>
+              </div>
+            </div>
+            <span class="badge">${escapeHtml(slip.receiptType.toUpperCase())}</span>
+          </div>
         </div>
 
         <div class="section">
@@ -420,10 +440,11 @@ export function ReceiptPreviewCard({ receipt }: Props) {
       ].filter((item) => item.show),
     [slip]
   );
+  const shouldShowLogo = settings?.print_preferences?.show_logo !== false;
 
   const onPrint = async () => {
     try {
-      const html = buildHtml(slip);
+      const html = buildHtml(slip, shouldShowLogo);
       const { uri } = await Print.printToFileAsync({ html });
 
       if (await Sharing.isAvailableAsync()) {
@@ -439,10 +460,13 @@ export function ReceiptPreviewCard({ receipt }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.headerCopy}>
-          <Text style={styles.schoolName}>{slip.schoolName}</Text>
-          <Text style={styles.schoolMeta}>{slip.schoolAddress}</Text>
-          <Text style={styles.schoolMeta}>{slip.schoolPhone}</Text>
+        <View style={styles.brandHeader}>
+          {shouldShowLogo ? <BrandLogo size={54} /> : null}
+          <View style={styles.headerCopy}>
+            <Text style={styles.schoolName}>{slip.schoolName}</Text>
+            <Text style={styles.schoolMeta}>{slip.schoolAddress}</Text>
+            <Text style={styles.schoolMeta}>{slip.schoolPhone}</Text>
+          </View>
         </View>
         <View style={styles.badgeWrap}>
           <Text style={styles.badge}>{slip.receiptType.toUpperCase()}</Text>
@@ -535,6 +559,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: theme.spacing.md,
     alignItems: 'flex-start'
+  },
+  brandHeader: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm
   },
   headerCopy: {
     flex: 1,

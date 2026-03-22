@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthShell } from '@/components/auth/AuthShell';
 import { AppButton } from '@/components/common/AppButton';
 import { FormInput } from '@/components/form/FormInput';
+import { Gap } from '@/components/layout/Gap';
 import type { RootStackParamList } from '@/navigation/types';
 import { useAuthStore } from '@/store/authStore';
 import { theme } from '@/theme';
@@ -57,7 +58,7 @@ export function LoginScreen() {
       footerActionLabel="Create one"
       onFooterActionPress={() => navigation.navigate('SignUp')}
     >
-      <View style={styles.form}>
+      <Gap size="md">
         <FormInput
           label="Tenant Slug"
           value={tenantSlug}
@@ -86,7 +87,7 @@ export function LoginScreen() {
           autoComplete="password"
           textContentType="password"
         />
-      </View>
+      </Gap>
 
       {authError ? <Text style={styles.errorText}>{authError}</Text> : null}
 
@@ -96,9 +97,6 @@ export function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  form: {
-    gap: theme.spacing.md
-  },
   errorText: {
     ...theme.typography.caption,
     color: theme.colors.danger,

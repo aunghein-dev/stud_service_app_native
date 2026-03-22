@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { BrandLogo } from '@/components/brand/BrandLogo';
 import { ScreenContainer } from '@/components/common/ScreenContainer';
 import { PageHeader } from '@/components/common/PageHeader';
 import { AppButton } from '@/components/common/AppButton';
 import { FormInput } from '@/components/form/FormInput';
+import { Gap } from '@/components/layout/Gap';
 import { settingsApi } from '@/services/settingsApi';
 import { useAuthStore } from '@/store/authStore';
 import type { Settings } from '@/types/settings';
@@ -27,15 +29,7 @@ export function SettingsScreen() {
     print_preferences: { show_logo: true }
   });
 
-  const schoolBadge = useMemo(() => {
-    const base = (settings.school_name || 'School')
-      .split(' ')
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase() || '')
-      .join('');
-    return base || 'SC';
-  }, [settings.school_name]);
+  const nextReceiptNo = useMemo(() => `${settings.receipt_prefix}-${settings.receipt_last_number + 1}`, [settings.receipt_prefix, settings.receipt_last_number]);
 
   useEffect(() => {
     setLoading(true);
@@ -94,22 +88,18 @@ export function SettingsScreen() {
       />
 
       <View style={styles.heroCard}>
-        <View style={styles.badgeWrap}>
-          <Text style={styles.badgeText}>{schoolBadge}</Text>
-        </View>
+        <BrandLogo size={56} />
         <View style={styles.heroCopy}>
           <Text style={styles.heroTitle}>{settings.school_name || 'School Profile'}</Text>
           <Text style={styles.heroSubtitle}>{settings.school_address || 'Add school address for receipts'}</Text>
-          <View style={styles.heroMetaRow}>
+          <Gap direction="row" wrap size="xs" style={styles.heroMetaRow}>
             <View style={styles.heroMetaChip}>
               <Ionicons name="wallet-outline" size={12} color={theme.colors.primary} />
               <Text style={styles.heroMetaText}>{settings.default_currency}</Text>
             </View>
             <View style={styles.heroMetaChip}>
               <Ionicons name="receipt-outline" size={12} color={theme.colors.primary} />
-              <Text style={styles.heroMetaText}>
-                {settings.receipt_prefix}-{settings.receipt_last_number + 1}
-              </Text>
+              <Text style={styles.heroMetaText}>{nextReceiptNo}</Text>
             </View>
             {session?.tenant?.slug ? (
               <View style={styles.heroMetaChip}>
@@ -117,7 +107,7 @@ export function SettingsScreen() {
                 <Text style={styles.heroMetaText}>{session.tenant.slug}</Text>
               </View>
             ) : null}
-          </View>
+          </Gap>
         </View>
       </View>
 
@@ -210,18 +200,6 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     ...theme.shadows.sm
   },
-  badgeWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: theme.radii.md,
-    backgroundColor: theme.colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  badgeText: {
-    ...theme.typography.subheading,
-    color: theme.colors.onPrimary
-  },
   heroCopy: {
     flex: 1,
     gap: theme.spacing.xxs
@@ -235,9 +213,6 @@ const styles = StyleSheet.create({
     color: theme.colors.textMuted
   },
   heroMetaRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: theme.spacing.xs,
     marginTop: theme.spacing.xxs
   },
   heroMetaChip: {
